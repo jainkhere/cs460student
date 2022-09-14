@@ -7,6 +7,7 @@
             body {
                 background-color: #121212;
                 color: white;
+                overflow: hidden !important;
             }
             #logo_gfx {
                 position: absolute;
@@ -14,13 +15,33 @@
                 top: 10px;
             }
         </style>
+        
+        <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+        
         <script text="text/javascript">
+
             window.onload = function() {
                 var logo = document.getElementById("logo_gfx");
                 console.log(logo);
                 logo.style.right = '500px';
+
+                var renderer = new X.renderer3D();
+                renderer.init();
+
+                var cubeRed = new X.cube();
+                cubeRed.color = [1, 0, 0];
+
+                var cubeBlue = new X.cube();
+                cubeRed.color = [0, 0, 1];
+                cubeBlue.center = [30, 0, 0];
+
+                renderer.add(cubeRed);
+                renderer.add(cubeBlue);
+                renderer.render();
             };
+
         </script>
+
     </head>
     <body>
         <h1>CS460 Assignment 02</h1>
