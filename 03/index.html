@@ -11,6 +11,20 @@
 				height: 100%;
 				overflow: hidden !important;
 			}
+			.object_count {
+				top: 10px;
+				right: 10px;
+				position: absolute;
+				font-size: 32px;
+				color: white;
+			}
+			/* .figure_count {
+				top: 10px;
+				right: 10px;
+				position: absolute;
+				font-size: 16px;
+				color: white;
+			} */
 		</style>
 		<script
 			src="https://threejs.org/build/three.min.js"
@@ -28,6 +42,9 @@
 				ratio = window.innerWidth / window.innerHeight;
 				zNear = 1;
 				zFar = 10000;
+
+				var numberOfFigures = 0;
+
 				// console.log(ratio);
 				camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
 				camera.position.set(0, 0, 100);
@@ -72,11 +89,11 @@
 				// ACTION!
 				//
 
-				// onmousemove
-				renderer.domElement.onclick = function (e) {
+				// onmousemove for bonus question
+				renderer.domElement.onmousemove = function (e) {
 					if (!e.shiftKey) {
 						e.preventDefault();
-						// return false;
+						return false;
 					}
 
 					console.log('yes! you clicked!');
@@ -108,12 +125,18 @@
 					);
 
 					// Create a new shape for assignment 3 here.
-					geometry = new THREE.BoxBufferGeometry(20, 20, 20);
-					material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-					cube = new THREE.Mesh(geometry, material);
-					scene.add(cube);
+					// geometry = new THREE.BoxBufferGeometry(20, 20, 20);
+					// material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+					// cube = new THREE.Mesh(geometry, material);
+					// scene.add(cube);
 
-					cube.material.color.setHex(Math.floor(Math.random() * 16777215));
+					// cube.material.color.setHex(Math.floor(Math.random() * 16777215));
+					// for (var i = 0; i < 1000; i++) {
+					randomlyGenerateAnyShape();
+					numberOfFigures = numberOfFigures + 1;
+					console.log(numberOfFigures);
+					updateCount(numberOfFigures);
+					// }
 				};
 			};
 
@@ -123,7 +146,72 @@
 				controls.update();
 				renderer.render(scene, camera);
 			}
+
+			function randomlyGenerateAnyShape() {
+				// Generate random number between 0 to 6
+				var num = Math.ceil((Math.random() * 10) % 6);
+				console.log('Randomly generate shape -> ' + num);
+				switch (num) {
+					default:
+						geometry = new THREE.BoxBufferGeometry(20, 20, 20);
+						material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+						cube = new THREE.Mesh(geometry, material);
+						scene.add(cube);
+
+						cube.material.color.setHex(Math.floor(Math.random() * 16777215));
+						break;
+					case 1:
+						geometry = new THREE.TorusKnotBufferGeometry(10, 3, 64, 8);
+						material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+						cube = new THREE.Mesh(geometry, material);
+						scene.add(cube);
+
+						cube.material.color.setHex(Math.floor(Math.random() * 16777215));
+						break;
+					case 2:
+						geometry = new THREE.SphereGeometry(15, 32, 16);
+						material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+						cube = new THREE.Mesh(geometry, material);
+						scene.add(cube);
+
+						cube.material.color.setHex(Math.floor(Math.random() * 16777215));
+						break;
+					case 3:
+						geometry = new THREE.OctahedronGeometry(10);
+						material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+						cube = new THREE.Mesh(geometry, material);
+						scene.add(cube);
+
+						cube.material.color.setHex(Math.floor(Math.random() * 16777215));
+						break;
+					case 4:
+						geometry = new THREE.ConeGeometry(5, 20, 32);
+						material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+						cube = new THREE.Mesh(geometry, material);
+						scene.add(cube);
+
+						cube.material.color.setHex(Math.floor(Math.random() * 16777215));
+						break;
+					case 5:
+						geometry = new THREE.RingGeometry(1, 5, 32);
+						material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+						cube = new THREE.Mesh(geometry, material);
+						scene.add(cube);
+
+						cube.material.color.setHex(Math.floor(Math.random() * 16777215));
+						break;
+				}
+			}
+
+			function updateCount(numberOfFigures) {
+				var counter = document.getElementsByClassName('figure_count')[0];
+				counter.innerHTML = numberOfFigures;
+			}
 		</script>
 	</head>
-	<body></body>
+	<body>
+		<div class="object_count">
+			Total number of objects = <span class="figure_count">0</span>
+		</div>
+	</body>
 </html>
