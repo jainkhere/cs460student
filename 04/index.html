@@ -56,6 +56,8 @@
 
 		  gl_Position = vec4( final_position, 1.);
 
+		  gl_PointSize = 50.;
+
 		}
 	</script>
 
@@ -84,6 +86,13 @@
 		var obstacle_factor = 3; // Hint for the bonus!
 		var direction_y = 0;
 		var direction_x = 0;
+
+		function getRandomNumberBetweenOneAndNegOne() {
+			return (
+				(Math.ceil(Math.random() * 99) * (Math.round(Math.random()) ? 1 : -1)) /
+				100
+			);
+		}
 
 		window.onload = function () {
 			//************************************************************//
@@ -157,7 +166,51 @@
 			//
 			var vertices;
 
+			vertices = new Float32Array([
+				0.0,
+				0.0,
+				0.0, // V0.     	// 0
+				0.05,
+				0.0,
+				0.0, // V1.		// 1
+				0.0,
+				0.05,
+				0.0, // V2. 		// 2
+
+				-0.05,
+				0.05,
+				0.0, // V3.		// 3
+				0.0,
+				0.0,
+				0.0, // V4.     	// 4
+				0.0,
+				0.05,
+				0.0, // V5. 		// 5
+
+				-0.1,
+				0.1,
+				0.0, // V6
+				-0.1,
+				-0.1,
+				0.0, // V7
+				0.0,
+				0.0,
+				0.0,
+			]);
+
+			// var indices = new Uint8Array([0, 1, 2, 3, 2, 0]);
+
 			var v_buffer;
+
+			v_buffer = gl.createBuffer(); // create
+			gl.bindBuffer(gl.ARRAY_BUFFER, v_buffer); // bind
+			gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW); // put data in
+			gl.bindBuffer(gl.ARRAY_BUFFER, null); // unbind
+
+			// i_buffer = gl.createBuffer(); // create
+			// gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, i_buffer); // bind
+			// gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW); // put data in
+			// gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null); // unbind
 
 			//
 			// Part 1 Ends
@@ -183,7 +236,11 @@
 			//
 			// Part 2 Starts
 			//
-			var offset = [0, 0, 0];
+			var offset = [
+				getRandomNumberBetweenOneAndNegOne(),
+				getRandomNumberBetweenOneAndNegOne(),
+				0,
+			];
 
 			//
 			// Part 2 Ends
@@ -318,6 +375,11 @@
 					//
 					// Bonus Part 1!
 					//
+					current_offset[0] -= 0.01;
+
+					if (current_offset[0] < -1) {
+						current_offset[0] = 1;
+					}
 
 					// collision detection using the bounding box of this airplane
 					if (detectCollision(bbox_plane, current_offset)) {
