@@ -56,7 +56,7 @@
 
 		  gl_Position = vec4( final_position, 1.);
 
-		  gl_PointSize = 50.;
+		  gl_PointSize = 30.;
 
 		}
 	</script>
@@ -81,8 +81,8 @@
 		var v_shader, f_shader, shaderprogram;
 		var vertices, indices, v_buffer, i_buffer;
 
-		var step_x = 0.0;
-		var step_y = 0.0;
+		var step_x = 0.01;
+		var step_y = 0.01;
 		var obstacle_factor = 3; // Hint for the bonus!
 		var direction_y = 0;
 		var direction_x = 0;
@@ -147,6 +147,9 @@
 			// create multiple objects
 			objects = [];
 			objects.push(createAirplane());
+			objects.push(createObstacle());
+			objects.push(createObstacle());
+			objects.push(createObstacle());
 			objects.push(createObstacle());
 			objects.push(createObstacle());
 			objects.push(createObstacle());
@@ -299,16 +302,47 @@
 		//
 		// Part 4 Starts
 		//
-		window.onkeyup = function (e) {
+		window.onkeydown = function (e) {
+			console.log('key pressed.');
 			if (e.keyCode == 38) {
 				// player pressed up
+				direction_y += 1;
+				// step_y = 0.01;
 			} else if (e.keyCode == 40) {
 				// player pressed down
+				direction_y -= 1;
+				// step_y = 0.01;
 			} else if (e.keyCode == 37) {
 				// player pressed left
+				direction_x -= 1;
+				// step_x = 0.01;
 			} else if (e.keyCode == 39) {
 				// player pressed right
+				direction_x += 1;
+				// step_x = 0.01;
 			}
+			// animate();
+		};
+		window.onkeyup = function (e) {
+			console.log('key pressed.');
+			if (e.keyCode == 38) {
+				// player pressed up
+				direction_y -= 1;
+				// step_y = 0.01;
+			} else if (e.keyCode == 40) {
+				// player pressed down
+				direction_y += 1;
+				// step_y = 0.01;
+			} else if (e.keyCode == 37) {
+				// player pressed left
+				direction_x += 1;
+				// step_x = 0.01;
+			} else if (e.keyCode == 39) {
+				// player pressed right
+				direction_x -= 1;
+				// step_x = 0.01;
+			}
+			// animate();
 		};
 		//
 		// Part 4 Ends
