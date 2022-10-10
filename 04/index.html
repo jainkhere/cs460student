@@ -29,8 +29,16 @@
 
 			#scoreboard {
 				position: absolute;
+				font-size: 48px;
 				top: 10px;
 				right: 10px;
+			}
+			#help-text {
+				position: absolute;
+				font-size: 48px;
+				color: #000;
+				top: 10px;
+				left: 10px;
 			}
 		</style>
 	</head>
@@ -56,7 +64,7 @@
 
 		  gl_Position = vec4( final_position, 1.);
 
-		  gl_PointSize = 30.;
+		  gl_PointSize = 25.;
 
 		}
 	</script>
@@ -81,8 +89,8 @@
 		var v_shader, f_shader, shaderprogram;
 		var vertices, indices, v_buffer, i_buffer;
 
-		var step_x = 0.01;
-		var step_y = 0.01;
+		var step_x = 0.005;
+		var step_y = 0.005;
 		var obstacle_factor = 3; // Hint for the bonus!
 		var direction_y = 0;
 		var direction_x = 0;
@@ -156,9 +164,6 @@
 			objects.push(createObstacle());
 			objects.push(createObstacle());
 			objects.push(createObstacle());
-			objects.push(createObstacle());
-			objects.push(createObstacle());
-			objects.push(createObstacle());
 
 			animate();
 		};
@@ -198,7 +203,7 @@
 				0.0, // V7
 				0.0,
 				0.0,
-				0.0,
+				0.0, // V8
 			]);
 
 			// var indices = new Uint8Array([0, 1, 2, 3, 2, 0]);
@@ -303,55 +308,52 @@
 		// Part 4 Starts
 		//
 		window.onkeydown = function (e) {
-			console.log('key pressed.');
 			if (e.keyCode == 38) {
 				// player pressed up
 				direction_y += 1;
-				// step_y = 0.01;
 			} else if (e.keyCode == 40) {
 				// player pressed down
 				direction_y -= 1;
-				// step_y = 0.01;
 			} else if (e.keyCode == 37) {
 				// player pressed left
 				direction_x -= 1;
-				// step_x = 0.01;
 			} else if (e.keyCode == 39) {
 				// player pressed right
 				direction_x += 1;
-				// step_x = 0.01;
 			}
-			// animate();
 		};
 		window.onkeyup = function (e) {
-			console.log('key pressed.');
 			if (e.keyCode == 38) {
 				// player pressed up
 				direction_y -= 1;
-				// step_y = 0.01;
 			} else if (e.keyCode == 40) {
 				// player pressed down
 				direction_y += 1;
-				// step_y = 0.01;
 			} else if (e.keyCode == 37) {
 				// player pressed left
 				direction_x += 1;
-				// step_x = 0.01;
 			} else if (e.keyCode == 39) {
 				// player pressed right
 				direction_x -= 1;
-				// step_x = 0.01;
 			}
-			// animate();
 		};
 		//
 		// Part 4 Ends
 		//
 
 		var framecounter = 0;
+		var startGame = false;
+		var time = 3;
 
 		function animate() {
 			framecounter += 1;
+			// console.log(framecounter);
+
+			if (startGame == false && framecounter % 50 == 0) {
+				document.getElementById('help-text').innerHTML =
+					'Game starts in ' + time;
+				time -= 1;
+			}
 
 			if (framecounter > 150) {
 				// roughly every five seconds with 30 FPS
@@ -365,6 +367,8 @@
 				//
 
 				framecounter = 0;
+				document.getElementById('help-text').style.visibility = 'hidden';
+				startGame = true;
 			}
 
 			gl.clearColor(0, 0, 0, 0);
@@ -406,6 +410,10 @@
 						current_offset
 					);
 				} else if (current_objecttype == 'obstacle') {
+					if (startGame === false) {
+						continue;
+					}
+
 					//
 					// Bonus Part 1!
 					//
@@ -476,5 +484,6 @@
 	<body>
 		<canvas id="c"></canvas>
 		<div id="scoreboard">0</div>
+		<div id="help-text"></div>
 	</body>
 </html>
