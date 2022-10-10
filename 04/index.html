@@ -413,12 +413,22 @@
 
 					if (current_offset[0] < -1) {
 						current_offset[0] = 1;
+						current_offset[1] = getRandomNumberBetweenOneAndNegOne();
 					}
 
 					// collision detection using the bounding box of this airplane
 					if (detectCollision(bbox_plane, current_offset)) {
 						document.getElementById('scoreboard').innerHTML +=
 							' AND...GAME OVER!';
+
+						if (
+							alert(
+								'Your score - ' +
+									document.getElementById('scoreboard').innerHTML +
+									'\nPress OK to reload'
+							)
+						) {
+						} else window.location.reload();
 
 						return;
 					}
