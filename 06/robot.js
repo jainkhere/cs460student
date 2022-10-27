@@ -1,6 +1,6 @@
 Robot = function (x, y, z) {
   // this is the constructor
-  console.log("new robot created");
+  // console.log("new robot created");
 
   this.head = new THREE.Bone();
   this.head.position.x = x;
@@ -77,7 +77,7 @@ Robot = function (x, y, z) {
 };
 
 Robot.prototype.show = function (scene) {
-  console.log("show function called");
+  // console.log("show function called");
   rGroup = new THREE.Group();
   rGroup.add(this.head);
 
@@ -88,6 +88,61 @@ Robot.prototype.show = function (scene) {
   scene.add(helper);
 };
 
+Robot.prototype.raise_left_arm = function () {
+  this.movement = "raise left arm";
+};
+
+Robot.prototype.lower_left_arm = function () {
+  this.movement = "lower left arm";
+};
+
+Robot.prototype.kick = function () {
+  this.movement = "kick";
+};
+
 Robot.prototype.onAnimate = function () {
-  console.log("onAnimate function called");
+  if (this.movement == "raise left arm") {
+    // ... TODO slerping
+    var axis = [1, 0, 0];
+    var T = Math.PI;
+
+    var x = Math.sin(T / 2) * axis[0];
+    var y = Math.sin(T / 2) * axis[1];
+    var z = Math.sin(T / 2) * axis[2];
+    var w = Math.cos(T / 2);
+    q = new THREE.Quaternion(x, y, z, w);
+
+    this.leftUpperArm.quaternion.slerp(q, 0.1);
+  } else if (this.movement == "lower left arm") {
+    // ... TODO slerping
+    var axis = [0, 0, 0];
+    var T = Math.PI;
+
+    var x = Math.sin(T / 2) * axis[0];
+    var y = Math.sin(T / 2) * axis[1];
+    var z = Math.sin(T / 2) * axis[2];
+    var w = Math.cos(T / 2);
+    q = new THREE.Quaternion(x, y, z, w);
+
+    this.leftUpperArm.quaternion.slerp(q, 0.1);
+  } else if (this.movement == "kick") {
+    // ... TODO slerping and check once it is done for a backwards slerp
+    // you can use the identity quaternion for a backwards slerp
+    var axis = [1, 0, 0];
+    var T = Math.PI;
+
+    var x = Math.sin(T / 2) * axis[0];
+    var y = Math.sin(T / 2) * axis[1];
+    var z = Math.sin(T / 2) * axis[2];
+    var w = Math.cos(T / 2);
+    q = new THREE.Quaternion(x, y, z, w);
+
+    this.rightLowerLeg.quaternion.slerp(q, 0.1);
+
+    if (this.rightLowerLeg.quaternion.w < 0.0002624493992244452)
+      this.movement = "kick back";
+  } else if (this.movement == "kick back") {
+    idQ = new THREE.Quaternion(0, 0, 0, 1);
+    this.rightLowerLeg.quaternion.slerp(idQ, 0.1);
+  }
 };
