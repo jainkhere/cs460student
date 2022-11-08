@@ -99,6 +99,9 @@ Robot.prototype.lower_left_arm = function () {
 Robot.prototype.kick = function () {
   this.movement = "kick";
 };
+Robot.prototype.dance = function () {
+  this.movement = "dance";
+};
 
 Robot.prototype.onAnimate = function () {
   if (this.movement == "raise left arm") {
@@ -144,5 +147,57 @@ Robot.prototype.onAnimate = function () {
   } else if (this.movement == "kick back") {
     idQ = new THREE.Quaternion(0, 0, 0, 1);
     this.rightLowerLeg.quaternion.slerp(idQ, 0.1);
+  } else if (this.movement == "dance") {
+    if (typeof this.dancer === "undefined") {
+      this.dancer = setInterval(
+        function () {
+          //
+          // some random translation
+          //
+          var shakehead = 3 * Math.random();
+          if (Math.random() < 0.5) {
+            shakehead *= -1;
+          }
+
+          var shakeneck = 3 * Math.random();
+          if (Math.random() < 0.5) {
+            shakeneck *= -1;
+          }
+
+          var shaketorso = 3 * Math.random();
+          if (Math.random() < 0.5) {
+            shaketorso *= -1;
+          }
+
+          this.head.position.x += shakehead;
+          this.neck.position.x += shakeneck;
+          this.torso.position.x += shaketorso;
+
+          //
+          // use actions
+          //
+          if (Math.random() < 0.3) {
+            this.raise_left_arm();
+          }
+
+          if (Math.random() < 0.3) {
+            this.lower_left_arm();
+          }
+
+          if (Math.random() < 0.3) {
+            this.kick();
+          }
+
+          if (Math.random() < 0.3) {
+            this.movement = "kick back";
+          }
+        }.bind(this),
+        500
+      );
+    }
   }
+  // else if (this.movement == 'stop dance') {
+  //   idQ = new THREE.Quaternion(0, 0, 0, 1);
+  //   this.rightLowerLeg.quaternion.slerp(idQ, 0.1);
+  // }
 };
