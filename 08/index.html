@@ -103,6 +103,10 @@
             }
           },
           walk: function () {
+            var music = document.getElementById("music-walk");
+            music.autoplay = true;
+            music.load();
+
             for (var r in all_robots) {
               r = all_robots[r];
               r.walk();
@@ -189,6 +193,9 @@
     <div style="visibility: hidden">
       <audio id="music">
         <source src="techno.mp3" />
+      </audio>
+      <audio id="music-walk">
+        <source src="walk.mp3" />
       </audio>
       <video
         id="video"
