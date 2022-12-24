@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html,
+      body {
+        background-color: #000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+    </style>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://threejs.org/build/three.module.js"
+        }
+      }
+    </script>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { GUI } from "https://unpkg.com/dat.gui@0.7.7/build/dat.gui.module.js";
+      import { TrackballControls } from "https://threejs.org/examples/jsm/controls/TrackballControls.js";
+      import { STLLoader } from "https://threejs.org/examples/jsm/loaders/STLLoader.js";
+
+      let scene,
+        camera,
+        renderer,
+        effect,
+        ambientLight,
+        directionalLight,
+        light,
+        mesh,
+        // toonMaterial,
+        // standardMaterial,
+        // phongMaterial,
+        controls,
+        controller;
+
+      window.onload = function () {
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(
+          60,
+          window.innerWidth / window.innerHeight,
+          1,
+          10000
+        );
+        camera.position.set(0, 0, -500);
+
+        renderer = new THREE.WebGLRenderer({});
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var color = 0xffffff;
+        var intensity = 2.0;
+
+        ambientLight = new THREE.AmbientLight();
+        scene.add(ambientLight);
+
+        var material = new THREE.MeshStandardMaterial({
+          color: "gray",
+        });
+
+        var loader = new STLLoader();
+        loader.load(
+          "fly.stl",
+          function (geometry) {
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+          },
+          (xhr) => {
+            console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+
+        // loader = new OBJLoader();
+        // loader.load("./Segmentation.obj", function (geometry) {
+        //   // geometry.computeVertexNormals();
+
+        //   phongMaterial = new THREE.MeshPhongMaterial({
+        //     color: "green",
+        //   });
+
+        //   mesh = new THREE.Mesh(geometry, phongMaterial);
+        //   mesh.position.x = -100;
+
+        //   scene.add(mesh);
+        // });
+
+        // TODO Part 2, use a different material for this mesh
+
+        controller = {
+          color: 0xffffff,
+        };
+
+        var gui = new GUI();
+        var ambientFolder = gui.addFolder("Ambient Light");
+        ambientFolder.addColor(controller, "color").onChange(function (value) {
+          ambientLight.color.setHex(value);
+        });
+        ambientFolder.open();
+
+        var materialFolder = gui.addFolder("Mesh properties");
+        materialFolder.addColor(controller, "color").onChange(function (value) {
+          material.color.setHex(value);
+        });
+        materialFolder.open();
+
+        gui.open();
+
+        controls = new TrackballControls(camera, renderer.domElement);
+
+        animate();
+      };
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        controls.update();
+
+        renderer.render(scene, camera);
+      }
+    </script>
+  </head>
+  <body></body>
+</html>
